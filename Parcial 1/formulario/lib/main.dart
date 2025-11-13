@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Vivero App',
+      title: 'Criadero de arboles',
 
       theme: TemaGeneral.claro,
 

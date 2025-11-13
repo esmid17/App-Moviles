@@ -8,6 +8,7 @@ class TarjetaResultado extends StatelessWidget {
 
   String _formatCurrency(double value) {
     final asString = value.round().toString();
+
     final regExp = RegExp(r'\B(?=(\d{3})+(?!\d))');
     final withDots = asString.replaceAll(regExp, '.');
 
@@ -37,11 +38,10 @@ class TarjetaResultado extends StatelessWidget {
           children: [
             Text(
               "Resumen de Compra",
-              style: textTheme.titleLarge,
+              style: textTheme.titleLarge, // (c) Tema
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-
             _buildResultRow("Subtotal Base", resultado.subtotalBase),
             const SizedBox(height: 8),
             _buildResultRow("Descuento (>1000 árboles)", resultado.montoDescAdicional),
@@ -49,7 +49,8 @@ class TarjetaResultado extends StatelessWidget {
             _buildResultRow("Subtotal con Descuento", resultado.subtotalConDescuento),
             const SizedBox(height: 8),
             _buildResultRow("IVA (19%)", resultado.montoIVA),
-            const Divider(height: 24, thickness: 1.5),
+            const SizedBox(height: 24),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

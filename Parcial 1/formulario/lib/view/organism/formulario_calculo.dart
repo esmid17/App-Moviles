@@ -19,41 +19,47 @@ class _FormularioCalculoState extends State<FormularioCalculo> {
 
   void _onCalcular() {
     setState(() {
-      _errorText = null; // Limpiar error previo
+      _errorText = null;
     });
 
-    // Validaciones de UI
-    final int? cantPaltos = int.tryParse(_paltosController.text);
-    final int? cantLimones = int.tryParse(_limonesController.text);
-    final int? cantChirimoyos = int.tryParse(_chirimoyosController.text);
+    //Validaciones
+    final int? cantPaltos = int.tryParse(_paltosController.text.isEmpty ? '0' : _paltosController.text);
+    final int? cantLimones = int.tryParse(_limonesController.text.isEmpty ? '0' : _limonesController.text);
+    final int? cantChirimoyos = int.tryParse(_chirimoyosController.text.isEmpty ? '0' : _chirimoyosController.text);
 
     if (cantPaltos == null || cantLimones == null || cantChirimoyos == null) {
       setState(() {
-        _errorText = "Error: Ingrese todas las cantidades.";
+        _errorText = "Error, Ingrese solo números válidos.";
       });
       return;
     }
 
     if (cantPaltos < 0 || cantLimones < 0 || cantChirimoyos < 0) {
       setState(() {
-        _errorText = "Error: Las cantidades no pueden ser negativas.";
+        _errorText = "Error, Las cantidades no pueden ser negativas.";
+      });
+      return;
+    }
+
+    final int cantidadTotal = cantPaltos + cantLimones + cantChirimoyos;
+    if (cantidadTotal == 0) {
+      setState(() {
+        _errorText = "Error, Debe ingresar al menos un árbol para calcular.";
       });
       return;
     }
 
     try {
-      // Llamada al Controlador
       final resultado = _arbolController.calcular(
         cantPaltos: cantPaltos,
         cantLimones: cantLimones,
         cantChirimoyos: cantChirimoyos,
       );
 
-      // (a) Aplicar rutas con parámetros
       Navigator.pushNamed(
         context,
         '/resultado',
-        arguments: resultado, // Pasamos el objeto Modelo como argumento
+        arguments: resultado,
       );
     } catch (e) {
       setState(() {
@@ -90,16 +96,14 @@ class _FormularioCalculoState extends State<FormularioCalculo> {
               child: Text(
                 _errorText!,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.error, // (c) Tema
+                  color: Theme.of(context).colorScheme.error,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-          // Átomo: AppButton
           ElevatedButton(
             onPressed: _onCalcular,
-            // El estilo se toma de elevatedButtonTheme en app_theme.dart
             child: const Text("Calcular Total"),
           ),
         ],

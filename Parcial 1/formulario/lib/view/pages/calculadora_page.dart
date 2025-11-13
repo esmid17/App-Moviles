@@ -8,7 +8,7 @@ class CalculadoraPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Calculadora Vivero"),
+        title: const Text("Calculadora"),
       ),
       body: SingleChildScrollView(
         child: FormularioCalculo(),

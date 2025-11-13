@@ -53,7 +53,6 @@ class ArbolController {
     );
   }
 
-  // Helper privado para calcular el descuento por tipo
   double _calcularNeto(int cantidad, double precio, double desc1, double desc2) {
     double subtotal = cantidad * precio;
     if (cantidad > 300) {

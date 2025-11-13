@@ -7,13 +7,11 @@ class ResultadoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // (a) Recibir el parámetro de la ruta
     final resultado = ModalRoute.of(context)!.settings.arguments as ResultadoCalculo;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Resultado del Cálculo"),
-        // El back button es automático
+        title: const Text("Resultado"),
       ),
       body: Center(
         child: TarjetaResultado(resultado: resultado),

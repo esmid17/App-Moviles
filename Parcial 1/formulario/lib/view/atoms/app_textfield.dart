@@ -20,7 +20,6 @@ class AppTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         errorText: errorText,
-        // El estilo se toma de inputDecorationTheme en app_theme.dart
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
