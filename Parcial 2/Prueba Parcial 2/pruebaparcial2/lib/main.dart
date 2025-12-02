@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       ),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Prueba Parcial 2',
+        title: 'Picsum Gallery',
         theme: TemaGeneral.claro,
         home: const HomePage(),
       ),

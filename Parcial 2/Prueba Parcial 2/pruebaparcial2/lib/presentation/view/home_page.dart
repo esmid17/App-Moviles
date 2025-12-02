@@ -59,12 +59,11 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: Consumer<PhotoViewmodel>(
                 builder: (context, vm, _) {
-                  if (vm.photos.isEmpty && vm.loading) {
+                  if (vm.items.isEmpty && vm.loading) {
                     return const Center(
                       child: CircularProgressIndicator(color: Colors.white),
                     );
                   }
-
                   return RefreshIndicator(
                     onRefresh: vm.refresh,
                     color: Colors.white,
@@ -78,14 +77,12 @@ class _HomePageState extends State<HomePage> {
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
-                      itemCount: vm.photos.length + (vm.hasMore ? 1 : 0),
+                      itemCount: vm.filteredItems.length + (vm.hasMore ? 1 : 0),
                       itemBuilder: (context, index) {
-                        if (index >= vm.photos.length) {
-                          return const Center(
-                            child: CircularProgressIndicator(color: Colors.white70),
-                          );
+                        if (index >= vm.filteredItems.length) {
+                          return const Center(child: CircularProgressIndicator(color: Colors.white70));
                         }
-                        return PhotoCard(photo: vm.photos[index]);
+                        return PhotoCard(photo: vm.filteredItems[index]);
                       },
                     ),
                   );

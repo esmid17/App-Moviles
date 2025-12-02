@@ -3,63 +3,71 @@ import 'package:pruebaparcial2/domain/entities/photo.dart';
 import 'package:pruebaparcial2/domain/usecases/get_photos_usecase.dart';
 
 class PhotoViewmodel extends ChangeNotifier {
-  final GetPhotosUsecase _usecase;
+  final GetPhotosUsecase _useCase;
 
-  final List<Photo> _all = [];
-  List<Photo> _filtered = [];
-  bool _loading = false;
-  bool _hasMore = true;
-  int _page = 1;
-  String _query = '';
-
-  List<Photo> get photos => _filtered;
-  bool get loading => _loading;
-  bool get hasMore => _hasMore;
-
-  PhotoViewmodel(this._usecase) {
-    loadMore();
+  PhotoViewmodel(this._useCase) {
+    loadData(); // carga la primera página al iniciar
   }
 
-  Future<void> loadMore() async {
-    if (_loading || !_hasMore) return;
-    _loading = true;
+  List<Photo> items = [];
+  bool loading = false;
+  bool hasMore = true;
+  int _currentPage = 1;
+  String _searchQuery = '';
+
+  List<Photo> get filteredItems => _searchQuery.isEmpty
+      ? items
+      : items.where((p) => p.author.toLowerCase().contains(_searchQuery)).toList();
+
+  Future<void> loadData() async {
+    if (loading) return;
+    loading = true;
+    hasMore = true;
+    _currentPage = 1;
     notifyListeners();
 
     try {
-      final newPhotos = await _usecase(_page, 30);
+      items = await _useCase(_currentPage, 30);
+      _currentPage++;
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
+
+    loading = false;
+    notifyListeners();
+  }
+
+  Future<void> loadMore() async {
+    if (loading || !hasMore) return;
+    loading = true;
+    notifyListeners();
+
+    try {
+      final newPhotos = await _useCase(_currentPage, 30);
       if (newPhotos.isEmpty) {
-        _hasMore = false;
+        hasMore = false;
       } else {
-        _all.addAll(newPhotos);
-        _applyFilter();
-        _page++;
+        items.addAll(newPhotos);
+        _currentPage++;
       }
     } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      _loading = false;
-      notifyListeners();
+      debugPrint('Error loadMore: $e');
     }
-  }
 
-  void search(String text) {
-    _query = text.toLowerCase();
-    _applyFilter();
-  }
-
-  void _applyFilter() {
-    _filtered = _query.isEmpty
-        ? List.from(_all)
-        : _all.where((p) => p.author.toLowerCase().contains(_query)).toList();
+    loading = false;
     notifyListeners();
   }
 
+  void search(String query) {
+    _searchQuery = query.toLowerCase();
+    notifyListeners();
+  }
+
+  // Refresh (para el RefreshIndicator)
   Future<void> refresh() async {
-    _all.clear();
-    _filtered.clear();
-    _page = 1;
-    _hasMore = true;
-    notifyListeners();
-    await loadMore();
+    items.clear();
+    _currentPage = 1;
+    hasMore = true;
+    await loadData();
   }
 }
